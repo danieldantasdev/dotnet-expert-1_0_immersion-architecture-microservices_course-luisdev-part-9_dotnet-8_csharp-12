@@ -1,0 +1,167 @@
+services:
+  elasticsearch:
+    container_name: elasticsearch
+    image: 'elasticsearch:8.2.2'
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: 'false'
+      xpack.security.http.ssl.enabled: 'false'
+      xpack.security.transport.ssl.enabled: 'false'
+    restart: always
+
+  kibana:
+    container_name: kibana
+    image: 'kibana:8.2.2'
+    environment:
+      ELASTICSEARCH_HOSTS: 'http://elasticsearch:9200'
+    ports:
+      - "5601:5601"
+    restart: always
+
+    depends_on:
+      - elasticsearch
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:18.0.0
+    command:
+    - start-dev
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      DB_ADDR: postgres
+      DB_USER: kong
+      DB_PASSWORD: kongpass
+      
+    depends_on:
+      - postgres
+  postgres:
+    
+    container_name: postgres
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_DB: kong
+      POSTGRES_PASSWORD: kongpass
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kong"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  kong-bootstrap:
+    container_name: kong-bootstrap
+    image: kong/kong-gateway:2.8
+    command: "kong migrations bootstrap"
+    restart: on-failure
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_PASSWORD: kongpass
+      KONG_PASSWORD: test
+    depends_on:
+      - postgres
+
+
+  kong-gateway:
+    container_name: kong-gateway
+    restart: always
+    image: kong/kong-gateway:2.8
+    ports:
+      #SECURE
+      - "8443:8443" #PROXY
+      - "8444:8444" #ADMIN
+      - "8445:8445" #GUI
+      # INSECURE
+      - "8000:8000"   #PROXY
+      - "8001:8001"   #ADMIN
+      - "8002:8002"   #GUI
+  
+    volumes:
+      - ./certs:/etc/ssl/certs
+    environment:
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_PASSWORD: kongpass
+      KONG_PASSWORD: test
+      KONG_ADMIN_GUI_URL: http://localhost:8002
+      KONG_SSL_CERT: /etc/ssl/certs/localhost.crt
+      KONG_SSL_CERT_KEY: /etc/ssl/certs/localhost.key
+      KONG_ADMIN_SSL_CERT: /etc/ssl/certs/localhost.crt
+      KONG_ADMIN_SSL_CERT_KEY: /etc/ssl/certs/localhost.key
+      KONG_ADMIN_GUI_SSL_CERT: /etc/ssl/certs/localhost.crt
+      KONG_ADMIN_GUI_SSL_CERT_KEY: /etc/ssl/certs/localhost.key
+
+    depends_on:
+      - postgres
+      - kong-bootstrap
+
+  prometheus:
+    container_name: prometheus
+    restart: always
+    image: prom/prometheus
+    volumes:
+      - ${PWD}/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  
+  grafana:
+    container_name: grafana
+    restart: always
+    image: grafana/grafana-oss
+    ports:
+      - "3080:3000"
+ 
+  zipkin:
+    container_name: zipkin
+    restart: always
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+  cors-test:
+    container_name: corstest
+    build: ./docker/front
+    ports:
+      - "4000:4000"
+      
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: unless-stopped
+
+  
+  rabbitmq:
+    container_name: rabbitmq
+    restart: unless-stopped
+    build: ./docker/rabbitmq
+
+  rabbitmq-create-queues:
+    container_name: rabbitmq-create-queues
+    build: ./docker/create-queues
+    depends_on:
+    - rabbitmq
+  
+
+  awesomeshop-orders-api:
+    container_name: awesomeshop-orders-api
+    image: ghcr.io/patrickreinan/awesomeshop-orders-api:latest
+    restart: always
+    environment:
+     - MONGO__Database=order-service
+     - MONGO__ConnectionString=mongodb://mongo:27017
+     - RABBITMQ__Hostname=rabbitmq
+
+    ports: 
+      - 8070:80
+
+    depends_on:
+    - rabbitmq-create-queues
+
+networks:
+  default:
+    name: kong-wks
