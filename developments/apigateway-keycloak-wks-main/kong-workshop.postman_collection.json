@@ -1,0 +1,614 @@
+{
+	"info": {
+		"_postman_id": "91d2bb88-a773-4f90-8cfa-9953389d9a4b",
+		"name": "kong-workshop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1749533"
+	},
+	"item": [
+		{
+			"name": "awesome-shop-orders",
+			"item": [
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": {\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"fullName\": \"string\",\n    \"email\": \"string\"\n  },\n  \"items\": [\n    {\n      \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n      \"quantity\": 0,\n      \"price\": 0\n    }\n  ],\n  \"deliveryAddress\": {\n    \"street\": \"string\",\n    \"number\": \"string\",\n    \"city\": \"string\",\n    \"state\": \"string\",\n    \"zipCode\": \"string\"\n  },\n  \"paymentAddress\": {\n    \"street\": \"string\",\n    \"number\": \"string\",\n    \"city\": \"string\",\n    \"state\": \"string\",\n    \"zipCode\": \"string\"\n  },\n  \"paymentInfo\": {\n    \"cardNumber\": \"string\",\n    \"fullName\": \"string\",\n    \"expirationDate\": \"string\",\n    \"cvv\": \"string\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{awesomeshop-orders-api-baseurl}}/api/orders",
+							"host": [
+								"{{awesomeshop-orders-api-baseurl}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{awesomeshop-orders-api-baseurl}}/api/orders/?id=7c907b6b-36ac-44cc-ab76-7e5fd8293bae",
+							"host": [
+								"{{awesomeshop-orders-api-baseurl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "7c907b6b-36ac-44cc-ab76-7e5fd8293bae"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "kong",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kong-proxy-url}}/api/orders/?id=7c907b6b-36ac-44cc-ab76-7e5fd8293bae",
+							"host": [
+								"{{kong-proxy-url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "7c907b6b-36ac-44cc-ab76-7e5fd8293bae"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": {\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"fullName\": \"string\",\n    \"email\": \"string\"\n  },\n  \"items\": [\n    {\n      \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n      \"quantity\": 0,\n      \"price\": 0\n    }\n  ],\n  \"deliveryAddress\": {\n    \"street\": \"string\",\n    \"number\": \"string\",\n    \"city\": \"string\",\n    \"state\": \"string\",\n    \"zipCode\": \"string\"\n  },\n  \"paymentAddress\": {\n    \"street\": \"string\",\n    \"number\": \"string\",\n    \"city\": \"string\",\n    \"state\": \"string\",\n    \"zipCode\": \"string\"\n  },\n  \"paymentInfo\": {\n    \"cardNumber\": \"string\",\n    \"fullName\": \"string\",\n    \"expirationDate\": \"string\",\n    \"cvv\": \"string\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{kong-proxy-url}}/api/orders/",
+							"host": [
+								"{{kong-proxy-url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get with route id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kong-proxy-url}}/api/orders/:id",
+							"host": [
+								"{{kong-proxy-url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "7c907b6b-36ac-44cc-ab76-7e5fd8293bae"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get with route id keyauth",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "{{kong-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{kong-proxy-url}}/api/orders/:id",
+							"host": [
+								"{{kong-proxy-url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "aefc0b66-ce9b-489f-8509-b52d2d7efa5b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post autheticated",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "{{kong-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": {\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"fullName\": \"string\",\n    \"email\": \"string\"\n  },\n  \"items\": [\n    {\n      \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n      \"quantity\": 0,\n      \"price\": 0\n    }\n  ],\n  \"deliveryAddress\": {\n    \"street\": \"string\",\n    \"number\": \"string\",\n    \"city\": \"string\",\n    \"state\": \"string\",\n    \"zipCode\": \"string\"\n  },\n  \"paymentAddress\": {\n    \"street\": \"string\",\n    \"number\": \"string\",\n    \"city\": \"string\",\n    \"state\": \"string\",\n    \"zipCode\": \"string\"\n  },\n  \"paymentInfo\": {\n    \"cardNumber\": \"string\",\n    \"fullName\": \"string\",\n    \"expirationDate\": \"string\",\n    \"cvv\": \"string\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{kong-proxy-url}}/api/orders/",
+							"host": [
+								"{{kong-proxy-url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get with route id jwt",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://localhost:8443/auth/token",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "email profile",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "{{keycloak-orders-client-secret}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{keycloak-orders-client-client-id}}",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "authUrl",
+									"value": "{{keycloak-base-url}}/realms/{{keycloak-realm}}/protocol/openid-connect/auth",
+									"type": "string"
+								},
+								{
+									"key": "state",
+									"value": "nounce",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://jwt.ms",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "oidc-token",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJUSzZILTg3TFlMaEVYZzR1S1lsaThrdkJGSDJ0cXA2Z3hHZFkxQTJON1RBIn0.eyJleHAiOjE2NTYzMTk0NTUsImlhdCI6MTY1NjI4MzQ1NSwianRpIjoiNmZkOWIzZWYtOGE4ZC00ZWE5LWJiNjQtYmYyNjM2MWZkNzgwIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAvcmVhbG1zL21hc3RlciIsInN1YiI6ImM5YzY3YWE2LTIzMjctNGRlZC05YjE5LWJkNzQyOTUyYWUxMiIsInR5cCI6IkJlYXJlciIsImF6cCI6Im9yZGVycy1jbGllbnQiLCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJjbGllbnRJZCI6Im9yZGVycy1jbGllbnQiLCJjbGllbnRIb3N0IjoiMTcyLjI3LjAuOCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZ3JvdXBzIjpbXSwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LW9yZGVycy1jbGllbnQiLCJjbGllbnRBZGRyZXNzIjoiMTcyLjI3LjAuOCIsImtvbmctY29uc3VtZXIiOiJvcmRlcnMtY2xpZW50In0.YRz5EKPnhwv9RVCRGhRCdN9ke5IjTmP__GOz9eXAq74Iph9qyTtIgdZ-2cXMSAUSaISKn4oZ_zp1eld64YvBOFj8eyS21H7-3urKeh_Ek4f6slGISHoUoGWpsqHPax2_cDFAL4os-fjERo6e5vn9_28ow3lOtieewm43LMd2og18jgu76j4uGouIG6Bzcx0OnJOTTARh6FjiJa2oH9uu9YvjNsVt6dnFJ7A-0NsaOoBR_nNjBaKazbk31B0v9hLz6k1m7UcLF0EgQ_CEm4VbzR65qT3DOpEwbU4l99AfG8I7dGq9mzTOFxYDpRS0jiXlNx7GcpQvk63xvhN_bB37IA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{kong-proxy-url}}/api/orders/:id",
+							"host": [
+								"{{kong-proxy-url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "aefc0b66-ce9b-489f-8509-b52d2d7efa5b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{keycloak-orders-client-client-id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{keycloak-orders-client-secret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "email profile",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{kong-proxy-url}}/auth/token",
+							"host": [
+								"{{kong-proxy-url}}"
+							],
+							"path": [
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "keycloak",
+			"item": [
+				{
+					"name": "request api token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{keycloak-orders-client-client-id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{keycloak-orders-client-secret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "openid",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{keycloak-base-url}}/realms/{{keycloak-realm}}/protocol/openid-connect/token",
+							"host": [
+								"{{keycloak-base-url}}"
+							],
+							"path": [
+								"realms",
+								"{{keycloak-realm}}",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "request user token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{keycloak-orders-client-client-id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{keycloak-orders-client-secret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "openid",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "johndoe",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "pwd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{keycloak-base-url}}/realms/{{keycloak-realm}}/protocol/openid-connect/token",
+							"host": [
+								"{{keycloak-base-url}}"
+							],
+							"path": [
+								"realms",
+								"{{keycloak-realm}}",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": ".well-known/openid-configuration",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{keycloak-client-id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{keycloak-client-secret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "openid roles",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{keycloak-base-url}}/realms/{{keycloak-realm}}/.well-known/openid-configuration",
+							"host": [
+								"{{keycloak-base-url}}"
+							],
+							"path": [
+								"realms",
+								"{{keycloak-realm}}",
+								".well-known",
+								"openid-configuration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "keys",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/realms/master/protocol/openid-connect/certs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"realms",
+								"master",
+								"protocol",
+								"openid-connect",
+								"certs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "kong-proxy-url",
+			"value": "https://localhost:8443"
+		},
+		{
+			"key": "awesomeshop-orders-api-baseurl",
+			"value": "http://localhost:8070",
+			"type": "string"
+		},
+		{
+			"key": "kong-api-key",
+			"value": "WBMvVdN64sHuGKyjfZ1TnjnBeWM4wCSS"
+		},
+		{
+			"key": "keycloak-realm",
+			"value": "master"
+		},
+		{
+			"key": "keycloak-base-url",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "keycloak-orders-client-client-id",
+			"value": "orders-client",
+			"type": "string"
+		},
+		{
+			"key": "keycloak-orders-client-secret",
+			"value": "Y77qZLCgJDzHG4S6aS3IxuZmdALJXHzl",
+			"type": "string"
+		}
+	]
+}
