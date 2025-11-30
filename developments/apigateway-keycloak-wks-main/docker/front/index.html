@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>CORS Test</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            border-radius: 5px;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+        }
+
+        body {
+
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+
+        input,
+        select,
+        label,
+        span {
+            display: block;
+            width: 100%;
+
+
+        }
+
+        input[type=text],
+        select {
+            border: thin lightgray solid;
+            height: 40px;
+        }
+
+        input[type=button] {
+            margin-top: 15px;
+            height: 40px;
+            background-color: lightskyblue;
+            border-style: none;
+            color: white
+        }
+
+        input[type=button]:active {
+            transform: scale(0.98);
+
+            background-color: blue;
+
+        }
+
+        input[type=button]:hover {
+
+            background-color: lightblue;
+
+        }
+
+        input {
+            margin-bottom: 15px;
+        }
+
+        select {
+            margin-bottom: 15px;
+        }
+
+
+        label {
+            margin-top: 15px;
+        }
+
+        span {
+            display: block;
+            width: 100%;
+            border: thin lightgray solid;
+        }
+
+        span[id=statuscode] {
+            height: 25px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        span[id=result] {
+            height: 300px;
+            overflow: scroll visible;
+
+        }
+
+        footer {
+            text-align: center;
+        }
+
+        h1 {
+            margin: auto;
+            width: 50%;
+            text-align: center;
+        }
+
+
+        h3 {
+            margin: auto;
+            width: 50%;
+            text-align: center;
+            color: gray;
+        }
+
+        .form {
+            margin: auto;
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <header>
+        <h1>CORS Test</h1>
+        <h3>Test GET methods only</h2>
+    </header>
+
+    <section>
+        <div class="form">
+            <label>URL
+                <input type="text" id="requesturl" />
+            </label>
+            <label> Authetication Type
+                <select id="auth_type">
+                    <option value="api-key">API Key</option>
+                    <option value="jwt-token-oauth">JWT Token (OAuth)</option>
+                </select>
+            </label>
+            <label>Value
+                <input type="text" id="authorization" />
+            </label>
+
+            <input type="button" id="call" value="Call" />
+            <span id="statuscode"></span>
+            <span id="result"></span>
+        </div>
+    </section>
+
+
+    <footer>
+        patrickreinan.com
+    </footer>
+</body>
+
+<script>
+
+    const result = document.getElementById('result')
+    const statuscode = document.getElementById('statuscode')
+    const requesturl = document.getElementById('requesturl')
+    const auth_type = document.getElementById('auth_type')
+    const authorization = document.getElementById('authorization')
+
+
+    function setStatus(status) {
+        statuscode.innerText = status
+
+
+        statuscode.style.backgroundColor =
+            status >= 200 && status <= 299 ? "lightgreen" :
+            status >= 400 && status <= 499 ? "lightyellow" :
+            status >= 500 && status <= 599 ? "lightred" : "white"
+        
+    }
+
+    function clearStatus() {
+        statuscode.innerText = null
+        statuscode.style.backgroundColor = "white"
+    }
+
+    document.getElementById('call')
+        .addEventListener("click", () => {
+
+           
+            if (!requesturl.value) {
+                result.innerText = "Invalid URL"
+                return
+            }
+
+            const headers = new Headers()
+            if (auth_type.value === "jwt-token-oauth")
+                headers.set("authorization", `Bearer ${authorization.value}`)
+            if (auth_type.value === "api-key")
+                headers.set("apikey", authorization.value)
+
+            fetch(requesturl.value, {
+                method: 'get',
+                headers: headers
+            }).then((response) => {
+
+                setStatus(response.status)
+                return response.json()
+
+            }).then((data) => {
+
+                result.innerText = JSON.stringify(data)
+            })
+                .catch((err) => {
+                    clearStatus()
+                    result.innerText = err
+                })
+
+
+        })
+
+
+
+</script>
+
+
+</html>
