@@ -1,0 +1,126 @@
+_format_version: "1.1"
+consumers:
+- acls:
+  - group: read
+  jwt_secrets:
+  - algorithm: RS256
+    key: curl
+    rsa_public_key: |-
+      {
+      "kid": "riUxziXTW9nhFrA3ClZvJkvWj8dxkMeI_62HIPGo7dY",
+      "kty": "RSA",
+      "alg": "RS256",
+      "use": "sig",
+      "n": "wQGAIgO_raadQRH_xpxw6hYUllZmMgWbo8LlDaepPZC5HpCmQbHI6Lbb9k-AQaJmNvKeceP_CKCrp48V-1RTjsf6l_96vif4f0J3joB1OT7ZQIKCbBEOIDbsMdnhZpxJFvWkGy4f2aKKAwY6lXl6xwx9zOewCV0qGVqW0vIxMDu9zJxjILnXMKZP3HNqlpN_6csTXvio7HiaItWP_NKRsRVV_zRwFd14rch5D4mmfa1ILH-d8DLcTsoVp2b7Fao1DPf5Z4SiNwdW-9MqvkPrGFFOlctIUhhodx3avF6nHcnhs7KQO77vILeQBiat-B-mlVcEwUOSqXQY5lIdFFJRBQ",
+      "e": "AQAB",
+      "x5c": [
+      "MIICmzCCAYMCBgGBTYuJATANBgkqhkiG9w0BAQsFADARMQ8wDQYDVQQDDAZtYXN0ZXIwHhcNMjIwNjEwMTIxNDU5WhcNMzIwNjEwMTIxNjM5WjARMQ8wDQYDVQQDDAZtYXN0ZXIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDBAYAiA7+tpp1BEf/GnHDqFhSWVmYyBZujwuUNp6k9kLkekKZBscjottv2T4BBomY28p5x4/8IoKunjxX7VFOOx/qX/3q+J/h/QneOgHU5PtlAgoJsEQ4gNuwx2eFmnEkW9aQbLh/ZoooDBjqVeXrHDH3M57AJXSoZWpbS8jEwO73MnGMgudcwpk/cc2qWk3/pyxNe+KjseJoi1Y/80pGxFVX/NHAV3XityHkPiaZ9rUgsf53wMtxOyhWnZvsVqjUM9/lnhKI3B1b70yq+Q+sYUU6Vy0hSGGh3Hdq8XqcdyeGzspA7vu8gt5AGJq34H6aVVwTBQ5KpdBjmUh0UUlEFAgMBAAEwDQYJKoZIhvcNAQELBQADggEBABQa/Cd15Wz21BgqIZ7IZpP/uDBKIdCt1oUwoW575TVoAb0QvL/M3Q770nJefQN726kloKDLWbo7l+YljKsJw3CBddSVQ4hG7PS5yWRtj4+nJsvWWfaSOiio7VOLQLU6VenzpTqjA5NSvfQRf6tbIB+R4Db56mqzQv78EsOeNbybWDiAYHeM/DFXh+MDSrGYuqJGQmb1ILnx/uj7EI69KWTp5rz81inIIDwcqwVCM7hOyan297/NvYe4/2d7lob/f6EGoIS2qvwmD6/AA918iuu0CXEMRnS9glp9U36eNHK/r1a4ZFqrDspGciOnfiKCeYpJ13BMUERVShXf15i6Z2Y="
+      ],
+      "x5t": "OrJPJsQ00rxhgcCvFCLkApZoDzc",
+      "x5t#S256": "Pwk6aO61b2KJSa1GHy3JuQRFA4KNG9xtFiOjT5bxDF0"
+      }
+    secret: x2LsUgmbzoM2Z6LpCGuip32viVkJWhhJ
+  username: curl
+plugins:
+- config:
+    custom_fields_by_lua: {}
+    path: /dev/stdout
+    reopen: false
+  enabled: true
+  name: file-log
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+- config:
+    content_type: application/json
+    custom_fields_by_lua: {}
+    flush_timeout: 2
+    headers: {}
+    http_endpoint: http://elasticsearch:9200/kong/_doc/
+    keepalive: 60000
+    method: POST
+    queue_size: 1
+    retry_count: 10
+    timeout: 10000
+  enabled: true
+  name: http-log
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+- config:
+    anonymous: null
+    claims_to_verify:
+    - exp
+    cookie_names: []
+    header_names:
+    - authorization
+    key_claim_name: username
+    maximum_expiration: 0
+    run_on_preflight: true
+    secret_is_base64: false
+    uri_param_names:
+    - jwt
+  enabled: true
+  name: jwt
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+- config:
+    body: null
+    content_type: null
+    echo: true
+    message: null
+    status_code: 200
+    trigger: null
+  enabled: true
+  name: request-termination
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+  route: foo-bar-root
+  service: foo-bar
+services:
+- connect_timeout: 60000
+  enabled: true
+  host: foo.bar
+  name: foo-bar
+  plugins:
+  - config:
+      allow:
+      - read
+      deny: null
+      hide_groups_header: false
+    enabled: true
+    name: acl
+    protocols:
+    - grpc
+    - grpcs
+    - http
+    - https
+  port: 80
+  protocol: http
+  read_timeout: 60000
+  retries: 5
+  routes:
+  - https_redirect_status_code: 426
+    name: foo-bar-root
+    path_handling: v0
+    paths:
+    - /foo-bar
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 60000
