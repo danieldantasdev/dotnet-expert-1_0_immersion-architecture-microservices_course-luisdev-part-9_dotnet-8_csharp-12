@@ -1,0 +1,12 @@
+FROM ubuntu:latest
+RUN apt-get update; apt-get install curl -y
+
+WORKDIR /app
+
+COPY ./create-queues.sh .
+
+USER root
+
+RUN chmod +x ./create-queues.sh
+
+ENTRYPOINT ["./create-queues.sh"]
